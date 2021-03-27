@@ -3,7 +3,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/lastpatrol/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/lastpatrol/frontend-project-lvl2/actions)",
-  "main": "index.js",
+  "main": "gen-diff.js",
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest",
     "lint": "eslint .",
@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/lastpatrol/frontend-project-lvl2#readme",
   "dependencies": {
-    "commander": "^7.2.0"
+    "commander": "^7.2.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^7.22.0",
