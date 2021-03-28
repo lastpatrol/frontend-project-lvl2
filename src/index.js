@@ -1,6 +1,6 @@
-import _ from "lodash";
-import { readFileSync } from "fs";
-import path from "path";
+import _ from 'lodash';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 const genDiff = (json1, json2) => {
   const obj1 = JSON.parse(json1);
@@ -24,15 +24,15 @@ const genDiff = (json1, json2) => {
     return acc;
   }, []);
 
-  return `{\n${resultArr.join("\n")}\n}`;
+  return `{\n${resultArr.join('\n')}\n}`;
 };
 
 const printDiffByPath = (filepath1, filepath2) => {
   const cwd = process.cwd();
   const fullPath1 = path.resolve(cwd, filepath1);
   const fullPath2 = path.resolve(cwd, filepath2);
-  const json1 = readFileSync(fullPath1, "utf-8");
-  const json2 = readFileSync(fullPath2, "utf-8");
+  const json1 = readFileSync(fullPath1, 'utf-8');
+  const json2 = readFileSync(fullPath2, 'utf-8');
   console.log(genDiff(json1, json2));
 };
 
