@@ -6,6 +6,7 @@
   "main": "gen-diff.js",
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest",
+    "test-interactive": "npx -n --experimental-vm-modules jest --watch",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "precommit": "lint-staged"
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/lastpatrol/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^7.2.0",
+    "js-yaml": "^4.0.0",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
