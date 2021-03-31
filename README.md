@@ -6,6 +6,10 @@
 
 # Difference calculator
 
+## About
+
+Works with both JSON and YAML files.
+
 ## Demo
 
-[![asciicast](https://asciinema.org/a/1y0WgxiX08Ddqz8N3EbqLL3ZK.svg)](https://asciinema.org/a/1y0WgxiX08Ddqz8N3EbqLL3ZK)
+[![asciicast](https://asciinema.org/a/LLXKD8S7tAaFjFos7FlCBpTIN.svg)](https://asciinema.org/a/LLXKD8S7tAaFjFos7FlCBpTIN)

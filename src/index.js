@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import { readFileSync } from 'fs';
 import path from 'path';
+import parse from './parse.js';
 
-const genDiff = (json1, json2) => {
-  const obj1 = JSON.parse(json1);
-  const obj2 = JSON.parse(json2);
+const genDiff = (obj1, obj2) => {
   const allKeysSorted = _.sortBy(_.union(Object.keys(obj1), Object.keys(obj2)));
   const resultArr = allKeysSorted.reduce((acc, key) => {
     const value1 = obj1[key];
@@ -27,13 +26,15 @@ const genDiff = (json1, json2) => {
   return `{\n${resultArr.join('\n')}\n}`;
 };
 
-const printDiffByPath = (filepath1, filepath2) => {
+const printDiff = (filepath1, filepath2) => {
   const cwd = process.cwd();
   const fullPath1 = path.resolve(cwd, filepath1);
   const fullPath2 = path.resolve(cwd, filepath2);
-  const json1 = readFileSync(fullPath1, 'utf-8');
-  const json2 = readFileSync(fullPath2, 'utf-8');
-  console.log(genDiff(json1, json2));
+  const type1 = path.extname(filepath1).slice(1);
+  const type2 = path.extname(filepath2).slice(1);
+  const obj1 = parse(readFileSync(fullPath1, 'utf-8'), type1);
+  const obj2 = parse(readFileSync(fullPath2, 'utf-8'), type2);
+  console.log(genDiff(obj1, obj2));
 };
 
-export { genDiff as default, printDiffByPath };
+export { genDiff as default, printDiff };

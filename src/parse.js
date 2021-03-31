@@ -1,19 +1,14 @@
-import { readFileSync } from 'fs';
-import path from 'path';
 import yaml from 'js-yaml';
 
-const parse = (filePath) => {
-  const data = readFileSync(filePath, 'utf-8');
-  const extension = path.extname(filePath);
-
-  if (extension === '.json') {
+const parse = (data, type) => {
+  if (type === 'json') {
     return JSON.parse(data);
   }
-  if (extension === '.yml' || extension === '.yaml') {
+  if (type === 'yml' || type === 'yaml') {
     return yaml.load(data);
   }
 
-  throw new Error('File extension is not supported!');
+  throw new Error('Invalid data type, cannot parse!');
 };
 
 export default parse;

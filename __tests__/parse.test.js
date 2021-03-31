@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import parse from '../src/parse.js';
@@ -5,6 +6,7 @@ import parse from '../src/parse.js';
 const filePath = fileURLToPath(import.meta.url);
 const dirPath = path.dirname(filePath);
 const getFixturePath = (filename) => path.join(dirPath, '..', '__fixtures__', filename);
+const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
 
 const obj1 = {
   host: 'hexlet.io',
@@ -20,11 +22,11 @@ const obj2 = {
 };
 
 test('json', () => {
-  expect(parse(getFixturePath('file1.json'))).toEqual(obj1);
-  expect(parse(getFixturePath('file2.json'))).toEqual(obj2);
+  expect(parse(readFile('file1.json'), 'json')).toEqual(obj1);
+  expect(parse(readFile('file2.json'), 'json')).toEqual(obj2);
 });
 
 test('yaml', () => {
-  expect(parse(getFixturePath('file1.yml'))).toEqual(obj1);
-  expect(parse(getFixturePath('file2.yml'))).toEqual(obj2);
+  expect(parse(readFile('file1.yml'), 'yaml')).toEqual(obj1);
+  expect(parse(readFile('file2.yml'), 'yml')).toEqual(obj2);
 });
