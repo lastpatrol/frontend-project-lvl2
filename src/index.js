@@ -1,10 +1,13 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import parse from './parse.js';
-import stylish from './stylish.js';
+import stylish from './formatters/stylish.js';
+import lazy from './formatters/lazy.js';
 import genDiff from './gendiff.js';
 
-export default (filepath1, filepath2) => {
+const formatters = { stylish, lazy };
+
+export default (filepath1, filepath2, format) => {
   const cwd = process.cwd();
   const fullPath1 = path.resolve(cwd, filepath1);
   const fullPath2 = path.resolve(cwd, filepath2);
@@ -13,5 +16,5 @@ export default (filepath1, filepath2) => {
   const obj1 = parse(readFileSync(fullPath1, 'utf-8'), type1);
   const obj2 = parse(readFileSync(fullPath2, 'utf-8'), type2);
   const diffObj = genDiff(obj1, obj2);
-  console.log(stylish(diffObj));
+  console.log(formatters[format](diffObj));
 };
