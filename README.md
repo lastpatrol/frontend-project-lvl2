@@ -12,8 +12,12 @@ Works with both JSON and YAML files.
 
 ## Demo
 
-### With flat structures
+### Default 'Stylish' formatter (flat and nested structures)
 [![asciicast](https://asciinema.org/a/LLXKD8S7tAaFjFos7FlCBpTIN.svg)](https://asciinema.org/a/LLXKD8S7tAaFjFos7FlCBpTIN)
-
-### With nested structures
 [![asciicast](https://asciinema.org/a/PfvAmFnK3XuLcJ2iXv3FZ34Ui.svg)](https://asciinema.org/a/PfvAmFnK3XuLcJ2iXv3FZ34Ui)
+
+### 'Plain' formatter
+[![asciicast](https://asciinema.org/a/f1C7bwIxDonzEHmRkL8Gf2LA9.svg)](https://asciinema.org/a/f1C7bwIxDonzEHmRkL8Gf2LA9)
+
+### 'Lazy' formatter
+[![asciicast](https://asciinema.org/a/k2n1bsaudjVF7QxuVtoBZOu91.svg)](https://asciinema.org/a/k2n1bsaudjVF7QxuVtoBZOu91)
