@@ -3,9 +3,10 @@ import path from 'path';
 import parse from './parse.js';
 import stylish from './formatters/stylish.js';
 import lazy from './formatters/lazy.js';
+import plain from './formatters/plain.js';
 import genDiff from './gendiff.js';
 
-const formatters = { stylish, lazy };
+const formatters = { stylish, lazy, plain };
 
 export default (filepath1, filepath2, format) => {
   const cwd = process.cwd();
