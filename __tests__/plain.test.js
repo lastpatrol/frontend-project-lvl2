@@ -10,7 +10,7 @@ const dirPath = path.dirname(filePath);
 const getFixturePath = (filename) => path.join(dirPath, '..', '__fixtures__', filename);
 
 test('json', () => {
-  const obj1 = parse(getFixturePath('file1.json'));
-  const obj2 = parse(getFixturePath('file2.yml'));
+  const obj1 = parse(getFixturePath('file1.yml'));
+  const obj2 = parse(getFixturePath('file2.json'));
   expect(plain(genDiff(obj1, obj2))).toEqual(expected);
 });
