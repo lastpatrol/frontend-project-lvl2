@@ -15,7 +15,7 @@ const parse = (filepath) => {
     case 'yaml':
       return yaml.load(data);
     default:
-      throw new Error('Invalid data type, cannot parse!');
+      throw new Error('Unknown file extension!');
   }
 };
 
