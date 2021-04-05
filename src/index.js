@@ -9,7 +9,7 @@ const formatters = {
   stylish, lazy, plain, json,
 };
 
-export default (filepath1, filepath2, format) => {
+export default (filepath1, filepath2, format = 'stylish') => {
   const obj1 = parse(filepath1);
   const obj2 = parse(filepath2);
   const diffObj = genDiff(obj1, obj2);
