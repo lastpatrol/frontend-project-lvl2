@@ -30,7 +30,7 @@ const stylish = (diffObj) => {
     return `{\n${joined}\n${closingBracketIndentation}}`;
   };
 
-  return iter(diffObj, 0);
+  return iter(diffObj, 2);
 };
 
 export default stylish;
