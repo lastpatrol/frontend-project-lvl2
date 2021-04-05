@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const stylish = (diffObj) => {
-  console.log(diffObj);
+  console.log(JSON.stringify(diffObj));
 
   const block = ' ';
   const indentStep = 4;
