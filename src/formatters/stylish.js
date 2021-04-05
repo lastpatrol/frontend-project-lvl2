@@ -1,7 +1,8 @@
 import _ from 'lodash';
+// import importObj from '../../__fixtures__/diff-obj.js';
 
 const stylish = (diffObj) => {
-  console.log(JSON.stringify(diffObj, null, 2));
+  // console.log(JSON.stringify(diffObj, null, 2));
 
   const block = ' ';
   const indentStep = 4;
@@ -20,6 +21,7 @@ const stylish = (diffObj) => {
         if (diff === 0) diffStr = diffSame;
 
         if (!Array.isArray(value)) {
+          console.log(`${indentation}${diffStr}${key}: ${value}`);
           return `${indentation}${diffStr}${key}: ${value}`;
         }
 
@@ -34,5 +36,7 @@ const stylish = (diffObj) => {
 
   return iter(diffObj, 0);
 };
+
+// console.log(stylish(importObj));
 
 export default stylish;
