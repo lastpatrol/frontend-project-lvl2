@@ -1,9 +1,6 @@
 import _ from 'lodash';
-// import importObj from '../../__fixtures__/diff-obj.js';
 
 const stylish = (diffObj) => {
-  // console.log(JSON.stringify(diffObj, null, 2));
-
   const block = ' ';
   const indentStep = 4;
   const diffLength = 2;
@@ -29,14 +26,11 @@ const stylish = (diffObj) => {
     );
 
     const joined = arr.join('\n');
-    console.log(joined);
     const closingBracketIndentation = indentation.slice(0, indentation.length - diffLength);
     return `{\n${joined}\n${closingBracketIndentation}}`;
   };
 
   return iter(diffObj, 0);
 };
-
-// console.log(stylish(importObj));
 
 export default stylish;
