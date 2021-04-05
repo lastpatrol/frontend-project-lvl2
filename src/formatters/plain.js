@@ -39,19 +39,16 @@ const plain = (diffObj) => {
           const values = getFromAndToValuesByKey(entries, key);
           const from = valueToStr(values.from);
           const to = valueToStr(values.to);
-          acc.push(`Property '${fullPath}' was updated. From ${from} to ${to}`);
-          return acc;
+          return [...acc, `Property '${fullPath}' was updated. From ${from} to ${to}`];
         }
 
         if (getDiffByKey(entries, key) > 0) {
           const value = getValueByKey(entries, key);
-          acc.push(`Property '${fullPath}' was added with value: ${valueToStr(value)}`);
-          return acc;
+          return [...acc, `Property '${fullPath}' was added with value: ${valueToStr(value)}`];
         }
 
         if (getDiffByKey(entries, key) < 0) {
-          acc.push(`Property '${fullPath}' was removed`);
-          return acc;
+          return [...acc, `Property '${fullPath}' was removed`];
         }
 
         const value = getValueByKey(entries, key);

@@ -15,97 +15,67 @@ const buildDiff = (obj1, obj2) => {
         const val1 = obj1[key];
         const val2 = obj2[key];
         if (isObject(val1) && isObject(val2)) {
-          acc.push({
-            diff: 0,
-            key,
-            value: buildDiff(val1, val2),
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: 0, key, value: buildDiff(val1, val2) },
+          ];
         }
         if (isObject(val1)) {
-          acc.push({
-            diff: -1,
-            key,
-            value: buildDiff(val1, val1),
-          });
-          acc.push({
-            diff: 1,
-            key,
-            value: val2,
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: -1, key, value: buildDiff(val1, val1) },
+            { diff: 1, key, value: val2 },
+          ];
         }
         if (isObject(val2)) {
-          acc.push({
-            diff: -1,
-            key,
-            value: val1,
-          });
-          acc.push({
-            diff: 1,
-            key,
-            value: buildDiff(val2, val2),
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: -1, key, value: val1 },
+            { diff: 1, key, value: buildDiff(val2, val2) },
+          ];
         }
         if (val1 === val2) {
-          acc.push({
-            diff: 0,
-            key,
-            value: val1,
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: 0, key, value: val1 },
+          ];
         }
 
-        acc.push({
-          diff: -1,
-          key,
-          value: val1,
-        });
-        acc.push({
-          diff: 1,
-          key,
-          value: val2,
-        });
-        return acc;
+        return [
+          ...acc,
+          { diff: -1, key, value: val1 },
+          { diff: 1, key, value: val2 },
+        ];
       }
 
       if (_.has(obj1, key)) {
         const val = obj1[key];
         if (isObject(val)) {
-          acc.push({
-            diff: -1,
-            key,
-            value: buildDiff(val, val),
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: -1, key, value: buildDiff(val, val) },
+          ];
         }
 
-        acc.push({
-          diff: -1,
-          key,
-          value: val,
-        });
-        return acc;
+        return [
+          ...acc,
+          { diff: -1, key, value: val },
+        ];
       }
 
       if (_.has(obj2, key)) {
         const val = obj2[key];
         if (isObject(val)) {
-          acc.push({
-            diff: 1,
-            key,
-            value: buildDiff(val, val),
-          });
-          return acc;
+          return [
+            ...acc,
+            { diff: 1, key, value: buildDiff(val, val) },
+          ];
         }
 
-        acc.push({
-          diff: 1,
-          key,
-          value: val,
-        });
-        return acc;
+        return [
+          ...acc,
+          { diff: 1, key, value: val },
+        ];
       }
 
       throw new Error('Strange unknown case in genDiff...');
