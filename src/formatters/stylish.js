@@ -21,7 +21,6 @@ const stylish = (diffObj) => {
         if (diff === 0) diffStr = diffSame;
 
         if (!Array.isArray(value)) {
-          console.log(`${indentation}${diffStr}${key}: ${value}`);
           return `${indentation}${diffStr}${key}: ${value}`;
         }
 
@@ -30,6 +29,7 @@ const stylish = (diffObj) => {
     );
 
     const joined = arr.join('\n');
+    console.log(joined);
     const closingBracketIndentation = indentation.slice(0, indentation.length - diffLength);
     return `{\n${joined}\n${closingBracketIndentation}}`;
   };
