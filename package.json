@@ -3,7 +3,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/lastpatrol/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/lastpatrol/frontend-project-lvl2/actions)",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest",
     "test-interactive": "npx -n --experimental-vm-modules jest --watch",
