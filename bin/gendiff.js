@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander/esm.mjs';
+import commander from 'commander';
 import printDiff from '../src/index.js';
 
+const { Command } = commander;
 const program = new Command();
 
 program
