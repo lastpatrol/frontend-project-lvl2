@@ -49,86 +49,59 @@ const buildDiff = (obj1, obj2) => {
         case 'void => nested':
           return {
             key,
-            addedData: {
-              type: 'nested',
-              children: buildDiff(obj2[key], obj2[key]),
-            },
+            type: 'toNested',
+            children: buildDiff(obj2[key], obj2[key]),
           };
         case 'void => simple':
           return {
             key,
-            addedData: {
-              type: 'simple',
-              value: obj2[key],
-            },
+            type: 'toSimple',
+            value: obj2[key],
           };
         case 'nested => void':
           return {
             key,
-            removedData: {
-              type: 'nested',
-              children: buildDiff(obj1[key], obj1[key]),
-            },
+            type: 'removed',
+            children: buildDiff(obj1[key], obj1[key]),
           };
         case 'simple => void':
           return {
             key,
-            removedData: {
-              type: 'simple',
-              value: obj1[key],
-            },
+            type: 'removed',
+            value: obj1[key],
           };
         case 'nested => nested':
           return {
             key,
-            data: {
-              type: 'nested',
-              children: buildDiff(obj1[key], obj2[key]),
-            },
+            type: 'unchanged',
+            children: buildDiff(obj1[key], obj2[key]),
           };
         case 'nested => simple':
           return {
             key,
-            removedData: {
-              type: 'nested',
-              children: buildDiff(obj1[key], obj1[key]),
-            },
-            addedData: {
-              type: 'simple',
-              value: obj2[key],
-            },
+            type: 'toSimple',
+            value: obj2[key],
+            children: buildDiff(obj1[key], obj1[key]),
           };
         case 'simple => nested':
           return {
             key,
-            removedData: {
-              type: 'simple',
-              value: obj1[key],
-            },
-            addedData: {
-              type: 'nested',
-              children: buildDiff(obj2[key], obj2[key]),
-            },
+            type: 'toNested',
+            value: obj1[key],
+            children: buildDiff(obj2[key], obj2[key]),
           };
         case 'old simple => new simple':
           return {
             key,
-            removedData: {
-              type: 'simple',
-              value: obj1[key],
-            },
-            addedData: {
-              type: 'simple',
-              value: obj2[key],
-            },
+            type: 'changedSimple',
+            removedValue: obj1[key],
+            addedValue: obj2[key],
           };
         case 'unchanged simple':
           return {
             key,
-            data: {
-              type: 'simple',
-              value: obj1[key],
-            },
+            type: 'unchanged',
+            value: obj1[key],
           };
         default:
           throw new Error('Something went wrong in genDiff...');

@@ -1,218 +1,152 @@
 export default [
   {
     key: 'common',
-    data: {
-      type: 'nested',
-      children: [
-        {
-          key: 'follow',
-          addedData: {
-            type: 'simple',
-            value: false,
+    type: 'unchanged',
+    children: [
+      {
+        key: 'follow',
+        type: 'toSimple',
+        value: false,
+      },
+      {
+        key: 'setting1',
+        type: 'unchanged',
+        value: 'Value 1',
+      },
+      {
+        key: 'setting2',
+        type: 'removed',
+        value: 200,
+      },
+      {
+        key: 'setting3',
+        type: 'changedSimple',
+        removedValue: true,
+        addedValue: null,
+      },
+      {
+        key: 'setting4',
+        type: 'toSimple',
+        value: 'blah blah',
+      },
+      {
+        key: 'setting5',
+        type: 'toNested',
+        children: [
+          {
+            key: 'key5',
+            type: 'unchanged',
+            value: 'value5',
           },
-        },
-        {
-          key: 'setting1',
-          data: {
-            type: 'simple',
-            value: 'Value 1',
-          },
-        },
-        {
-          key: 'setting2',
-          removedData: {
-            type: 'simple',
-            value: 200,
-          },
-        },
-        {
-          key: 'setting3',
-          removedData: {
-            type: 'simple',
-            value: true,
-          },
-          addedData: {
-            type: 'simple',
-            value: null,
-          },
-        },
-        {
-          key: 'setting4',
-          addedData: {
-            type: 'simple',
-            value: 'blah blah',
-          },
-        },
-        {
-          key: 'setting5',
-          addedData: {
-            type: 'nested',
+        ],
+      },
+      {
+        key: 'setting6',
+        type: 'unchanged',
+        children: [
+          {
+            key: 'doge',
+            type: 'unchanged',
             children: [
               {
-                key: 'key5',
-                data: {
-                  type: 'simple',
-                  value: 'value5',
-                },
+                key: 'wow',
+                type: 'changedSimple',
+                removedValue: '',
+                addedValue: 'so much',
               },
             ],
           },
-        },
-        {
-          key: 'setting6',
-          data: {
-            type: 'nested',
-            children: [
-              {
-                key: 'doge',
-                data: {
-                  type: 'nested',
-                  children: [
-                    {
-                      key: 'wow',
-                      removedData: {
-                        type: 'simple',
-                        value: '',
-                      },
-                      addedData: {
-                        type: 'simple',
-                        value: 'so much',
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                key: 'key',
-                data: {
-                  type: 'simple',
-                  value: 'value',
-                },
-              },
-              {
-                key: 'ops',
-                addedData: {
-                  type: 'simple',
-                  value: 'vops',
-                },
-              },
-            ],
+          {
+            key: 'key',
+            type: 'unchanged',
+            value: 'value',
           },
-        },
-      ],
-    },
+          {
+            key: 'ops',
+            type: 'toSimple',
+            value: 'vops',
+          },
+        ],
+      },
+    ],
   },
   {
     key: 'group1',
-    data: {
-      type: 'nested',
-      children: [
-        {
-          key: 'baz',
-          removedData: {
-            type: 'simple',
-            value: 'bas',
+    type: 'unchanged',
+    children: [
+      {
+        key: 'baz',
+        type: 'changedSimple',
+        removedValue: 'bas',
+        addedValue: 'bars',
+      },
+      {
+        key: 'foo',
+        type: 'unchanged',
+        value: 'bar',
+      },
+      {
+        key: 'nest',
+        type: 'toSimple',
+        children: [
+          {
+            key: 'key',
+            type: 'unchanged',
+            value: 'value',
           },
-          addedData: {
-            type: 'simple',
-            value: 'bars',
-          },
-        },
-        {
-          key: 'foo',
-          data: {
-            type: 'simple',
-            value: 'bar',
-          },
-        },
-        {
-          key: 'nest',
-          removedData: {
-            type: 'nested',
-            children: [
-              {
-                key: 'key',
-                data: {
-                  type: 'simple',
-                  value: 'value',
-                },
-              },
-            ],
-          },
-          addedData: {
-            type: 'simple',
-            value: 'str',
-          },
-        },
-      ],
-    },
+        ],
+        value: 'str',
+      },
+    ],
   },
   {
     key: 'group2',
-    removedData: {
-      type: 'nested',
-      children: [
-        {
-          key: 'abc',
-          data: {
-            type: 'simple',
-            value: 12345,
+    type: 'removed',
+    children: [
+      {
+        key: 'abc',
+        type: 'unchanged',
+        value: 12345,
+      },
+      {
+        key: 'deep',
+        type: 'unchanged',
+        children: [
+          {
+            key: 'id',
+            type: 'unchanged',
+            value: 45,
           },
-        },
-        {
-          key: 'deep',
-          data: {
-            type: 'nested',
-            children: [
-              {
-                key: 'id',
-                data: {
-                  type: 'simple',
-                  value: 45,
-                },
-              },
-            ],
-          },
-        },
-      ],
-    },
+        ],
+      },
+    ],
   },
   {
     key: 'group3',
-    addedData: {
-      type: 'nested',
-      children: [
-        {
-          key: 'deep',
-          data: {
-            type: 'nested',
+    type: 'toNested',
+    children: [
+      {
+        key: 'deep',
+        type: 'unchanged',
+        children: [
+          {
+            key: 'id',
+            type: 'unchanged',
             children: [
               {
-                key: 'id',
-                data: {
-                  type: 'nested',
-                  children: [
-                    {
-                      key: 'number',
-                      data: {
-                        type: 'simple',
-                        value: 45,
-                      },
-                    },
-                  ],
-                },
+                key: 'number',
+                type: 'unchanged',
+                value: 45,
               },
             ],
           },
-        },
-        {
-          key: 'fee',
-          data: {
-            type: 'simple',
-            value: 100500,
-          },
-        },
-      ],
-    },
+        ],
+      },
+      {
+        key: 'fee',
+        type: 'unchanged',
+        value: 100500,
+      },
+    ],
   },
 ];
