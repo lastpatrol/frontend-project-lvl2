@@ -1,66 +1,83 @@
 import _ from 'lodash';
 
-const isComplex = (value) => Array.isArray(value);
-
-const valueToStr = (value) => {
-  if (isComplex(value)) return '[complex value]';
-  if (typeof value === 'string') return `'${value}'`;
-  return String(value);
+const getDiffType = (obj) => {
+  if ((!_.has(obj, 'children') && obj.type === 'toSimple')
+    || (!_.has(obj, 'value') && obj.type === 'toNested')) {
+    return 'added';
+  }
+  if (obj.type === 'removed') {
+    return 'removed';
+  }
+  if (obj.type === 'changedSimple' || (_.has(obj, 'value') && _.has(obj, 'children'))) {
+    return 'updated';
+  }
+  if (obj.type === 'unchanged' && _.has(obj, 'children')) {
+    return 'unchangedWithChildren';
+  }
+  return 'unchangedWithoutChildren';
 };
 
-const getFromAndToValuesByKey = (entries, neededKey) => entries
-  .filter(({ key }) => key === neededKey)
-  .reduce(
-    (acc, { diff, value }) => (diff > 0 ? { ...acc, to: value } : { ...acc, from: value }),
-    {},
-  );
-
-const getDiffByKey = (entries, neededKey) => {
-  const [entry] = entries.filter(({ key }) => key === neededKey);
-  return entry.diff;
+const dataToStr = (data) => {
+  if (Array.isArray(data)) {
+    return '[complex value]';
+  }
+  if (typeof data === 'string') {
+    return `'${data}'`;
+  }
+  return String(data);
 };
 
-const getValueByKey = (entries, neededKey) => {
-  const [entry] = entries.filter(({ key }) => key === neededKey);
-  return entry.value;
+const getRemovedAsStr = (obj) => {
+  if (obj.type === 'removed') {
+    return _.has(obj, 'value') ? dataToStr(obj.value) : dataToStr(obj.children);
+  }
+  if (obj.type === 'toNested' && _.has(obj, 'value')) {
+    return dataToStr(obj.value);
+  }
+  if (obj.type === 'toSimple' && _.has(obj, 'children')) {
+    return dataToStr(obj.children);
+  }
+  if (_.has(obj, 'removedValue')) {
+    return dataToStr(obj.removedValue);
+  }
+  throw new Error(`Cannot find removed in:\n${JSON.stringify(obj)}`);
+};
+
+const getAddedAsStr = (obj) => {
+  if (obj.type === 'toNested') {
+    return dataToStr(obj.children);
+  }
+  if (obj.type === 'toSimple') {
+    return dataToStr(obj.value);
+  }
+  if (_.has(obj, 'addedValue')) {
+    return dataToStr(obj.addedValue);
+  }
+  throw new Error(`Cannot find added in:\n${JSON.stringify(obj)}`);
 };
 
 const plain = (diffObj) => {
-  const iter = (entries, path) => {
-    const keys = entries.map(({ key }) => key);
-    const uniqKeys = _.uniq(keys);
-    const updatedKeys = keys.filter((key, i, arr) => _.lastIndexOf(arr, key) !== i);
+  const iter = (entries, path) => entries.reduce(
+    (acc, obj) => {
+      const { key } = obj;
+      const fullPath = path.length === 0 ? `${key}` : `${path}.${key}`;
+      const diffType = getDiffType(obj);
 
-    return uniqKeys.reduce(
-      (acc, key) => {
-        const fullPath = path.length === 0 ? `${key}` : `${path}.${key}`;
-
-        if (updatedKeys.includes(key)) {
-          const values = getFromAndToValuesByKey(entries, key);
-          const from = valueToStr(values.from);
-          const to = valueToStr(values.to);
-          return [...acc, `Property '${fullPath}' was updated. From ${from} to ${to}`];
-        }
-
-        if (getDiffByKey(entries, key) > 0) {
-          const value = getValueByKey(entries, key);
-          return [...acc, `Property '${fullPath}' was added with value: ${valueToStr(value)}`];
-        }
-
-        if (getDiffByKey(entries, key) < 0) {
+      switch (diffType) {
+        case 'added':
+          return [...acc, `Property '${fullPath}' was added with value: ${getAddedAsStr(obj)}`];
+        case 'removed':
           return [...acc, `Property '${fullPath}' was removed`];
-        }
-
-        const value = getValueByKey(entries, key);
-        if (isComplex(value)) {
-          return [...acc, ...iter(value, fullPath)];
-        }
-
-        return acc;
-      },
-      [],
-    );
-  };
+        case 'updated':
+          return [...acc, `Property '${fullPath}' was updated. From ${getRemovedAsStr(obj)} to ${getAddedAsStr(obj)}`];
+        case 'unchangedWithChildren':
+          return [...acc, ...iter(obj.children, fullPath)];
+        default:
+          return acc;
+      }
+    },
+    [],
+  );
 
   return iter(diffObj, []).join('\n');
 };
