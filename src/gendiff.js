@@ -1,18 +1,11 @@
 import _ from 'lodash';
 
-const isObject = (el) => {
-  if (el === null || el === undefined) {
-    return false;
-  }
-  return el.constructor === Object;
-};
-
 const buildDiff = (obj1, obj2) => {
   const unitedKeys = _.sortBy(_.union(Object.keys(obj1), Object.keys(obj2)));
 
   return unitedKeys.map(
     (key) => {
-      if (!_.has(obj1, key) && isObject(obj2[key])) {
+      if (!_.has(obj1, key) && _.isPlainObject(obj2[key])) {
         return {
           key,
           type: 'added',
@@ -20,7 +13,7 @@ const buildDiff = (obj1, obj2) => {
         };
       }
 
-      if (!_.has(obj1, key) && !isObject(obj2[key])) {
+      if (!_.has(obj1, key) && !_.isPlainObject(obj2[key])) {
         return {
           key,
           type: 'added',
@@ -28,7 +21,7 @@ const buildDiff = (obj1, obj2) => {
         };
       }
 
-      if (!_.has(obj2, key) && isObject(obj1[key])) {
+      if (!_.has(obj2, key) && _.isPlainObject(obj1[key])) {
         return {
           key,
           type: 'removed',
@@ -36,7 +29,7 @@ const buildDiff = (obj1, obj2) => {
         };
       }
 
-      if (!_.has(obj2, key) && !isObject(obj1[key])) {
+      if (!_.has(obj2, key) && !_.isPlainObject(obj1[key])) {
         return {
           key,
           type: 'removed',
@@ -47,7 +40,7 @@ const buildDiff = (obj1, obj2) => {
       const value1 = obj1[key];
       const value2 = obj2[key];
 
-      if (isObject(value1) && isObject(value2)) {
+      if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
         return {
           key,
           type: 'unchanged',
@@ -55,7 +48,7 @@ const buildDiff = (obj1, obj2) => {
         };
       }
 
-      if (isObject(value1)) {
+      if (_.isPlainObject(value1)) {
         return {
           key,
           type: 'toSimple',
@@ -64,7 +57,7 @@ const buildDiff = (obj1, obj2) => {
         };
       }
 
-      if (isObject(value2)) {
+      if (_.isPlainObject(value2)) {
         return {
           key,
           type: 'toNested',
