@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import parse from '../src/parse.js';
 import genDiff from '../src/gendiff.js';
+import expectedGenDiff from '../__fixtures__/expected-gendiff.js';
 import stylish from '../src/formatters/stylish.js';
 import expectedStylish from '../__fixtures__/expected-stylish.js';
 import plain from '../src/formatters/plain.js';
@@ -14,6 +15,12 @@ const filePath = fileURLToPath(import.meta.url);
 const dirPath = path.dirname(filePath);
 const getFixturePath = (filename) => path.join(dirPath, '..', '__fixtures__', filename);
 const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
+
+test('genDiff', () => {
+  const obj1 = parse(readFile('file1.yml'), 'yml');
+  const obj2 = parse(readFile('file2.json'), 'json');
+  expect(genDiff(obj1, obj2)).toEqual(expectedGenDiff);
+});
 
 test.each`
   filename1       | filename2        | formatter  | expected
