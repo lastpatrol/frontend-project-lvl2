@@ -14,39 +14,37 @@ const stylish = (diffObj) => {
     const indentation = _.repeat(block, indentCount);
     const arrOfStrings = obj.reduce(
       (acc, node) => {
-        if (node.type === 'toNested') {
-          const value = _.has(node, 'value') ? `${indentation}${getDiffStr('-')}${node.key}: ${node.value}` : [];
-          const nested = `${indentation}${getDiffStr('+')}${node.key}: ${iter(node.children, indentCount + indentStep)}`;
-          return [...acc, value, nested];
-        }
+        const { type, key } = node;
+        const makeSimpleStr = (sign, value = node.value) => `${indentation}${getDiffStr(sign)}${key}: ${value}`;
+        const makeNestedStr = (sign) => `${indentation}${getDiffStr(sign)}${key}: ${iter(node.children, indentCount + indentStep)}`;
 
-        if (node.type === 'toSimple') {
-          const nested = _.has(node, 'children')
-            ? `${indentation}${getDiffStr('-')}${node.key}: ${iter(node.children, indentCount + indentStep)}` : [];
-          const value = `${indentation}${getDiffStr('+')}${node.key}: ${node.value}`;
-          return [...acc, nested, value];
+        switch (type) {
+          case 'added':
+            return [
+              ...acc,
+              _.has(node, 'value') ? makeSimpleStr('+') : makeNestedStr('+'),
+            ];
+          case 'removed':
+            return [
+              ...acc,
+              _.has(node, 'value') ? makeSimpleStr('-') : makeNestedStr('-'),
+            ];
+          case 'unchanged':
+            return [
+              ...acc,
+              _.has(node, 'value') ? makeSimpleStr('') : makeNestedStr(''),
+            ];
+          case 'toSimple':
+            return [
+              ...acc,
+              _.has(node, 'children') ? makeNestedStr('-') : makeSimpleStr('-', node.removedValue),
+              _.has(node, 'value') ? makeSimpleStr('+') : makeSimpleStr('+', node.addedValue),
+            ];
+          case 'toNested':
+            return [...acc, makeSimpleStr('-'), makeNestedStr('+')];
+          default:
+            throw new Error(`Unknown node type '${type}'`);
         }
-
-        if (node.type === 'removed') {
-          const value = _.has(node, 'value') ? `${indentation}${getDiffStr('-')}${node.key}: ${node.value}` : [];
-          const nested = _.has(node, 'children')
-            ? `${indentation}${getDiffStr('-')}${node.key}: ${iter(node.children, indentCount + indentStep)}` : [];
-          return [...acc, value, nested];
-        }
-
-        if (node.type === 'unchanged') {
-          const value = _.has(node, 'value') ? `${indentation}${getDiffStr()}${node.key}: ${node.value}` : [];
-          const nested = _.has(node, 'children')
-            ? `${indentation}${getDiffStr()}${node.key}: ${iter(node.children, indentCount + indentStep)}` : [];
-          return [...acc, value, nested];
-        }
-
-        if (node.type === 'changedSimple') {
-          const removed = `${indentation}${getDiffStr('-')}${node.key}: ${node.removedValue}`;
-          const added = `${indentation}${getDiffStr('+')}${node.key}: ${node.addedValue}`;
-          return [...acc, removed, added];
-        }
-        throw new Error(`Unknown node type '${node.type}'`);
       },
       [],
     );
