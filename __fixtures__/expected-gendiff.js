@@ -5,7 +5,7 @@ export default [
     children: [
       {
         key: 'follow',
-        type: 'toSimple',
+        type: 'added',
         value: false,
       },
       {
@@ -20,18 +20,18 @@ export default [
       },
       {
         key: 'setting3',
-        type: 'changedSimple',
+        type: 'toSimple',
         removedValue: true,
         addedValue: null,
       },
       {
         key: 'setting4',
-        type: 'toSimple',
+        type: 'added',
         value: 'blah blah',
       },
       {
         key: 'setting5',
-        type: 'toNested',
+        type: 'added',
         children: [
           {
             key: 'key5',
@@ -50,7 +50,7 @@ export default [
             children: [
               {
                 key: 'wow',
-                type: 'changedSimple',
+                type: 'toSimple',
                 removedValue: '',
                 addedValue: 'so much',
               },
@@ -63,7 +63,7 @@ export default [
           },
           {
             key: 'ops',
-            type: 'toSimple',
+            type: 'added',
             value: 'vops',
           },
         ],
@@ -76,7 +76,7 @@ export default [
     children: [
       {
         key: 'baz',
-        type: 'changedSimple',
+        type: 'toSimple',
         removedValue: 'bas',
         addedValue: 'bars',
       },
@@ -123,7 +123,7 @@ export default [
   },
   {
     key: 'group3',
-    type: 'toNested',
+    type: 'added',
     children: [
       {
         key: 'deep',
