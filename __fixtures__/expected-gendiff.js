@@ -1,7 +1,7 @@
 export default [
   {
     key: 'common',
-    type: 'unchanged',
+    type: 'nested',
     children: [
       {
         key: 'follow',
@@ -20,9 +20,9 @@ export default [
       },
       {
         key: 'setting3',
-        type: 'toSimple',
-        removedValue: true,
-        addedValue: null,
+        type: 'changed',
+        oldValue: true,
+        newValue: null,
       },
       {
         key: 'setting4',
@@ -32,27 +32,23 @@ export default [
       {
         key: 'setting5',
         type: 'added',
-        children: [
-          {
-            key: 'key5',
-            type: 'unchanged',
-            value: 'value5',
-          },
-        ],
+        value: {
+          key5: 'value5',
+        },
       },
       {
         key: 'setting6',
-        type: 'unchanged',
+        type: 'nested',
         children: [
           {
             key: 'doge',
-            type: 'unchanged',
+            type: 'nested',
             children: [
               {
                 key: 'wow',
-                type: 'toSimple',
-                removedValue: '',
-                addedValue: 'so much',
+                type: 'changed',
+                oldValue: '',
+                newValue: 'so much',
               },
             ],
           },
@@ -72,13 +68,13 @@ export default [
   },
   {
     key: 'group1',
-    type: 'unchanged',
+    type: 'nested',
     children: [
       {
         key: 'baz',
-        type: 'toSimple',
-        removedValue: 'bas',
-        addedValue: 'bars',
+        type: 'changed',
+        oldValue: 'bas',
+        newValue: 'bars',
       },
       {
         key: 'foo',
@@ -87,66 +83,34 @@ export default [
       },
       {
         key: 'nest',
-        type: 'toSimple',
-        children: [
-          {
-            key: 'key',
-            type: 'unchanged',
-            value: 'value',
-          },
-        ],
-        value: 'str',
+        type: 'changed',
+        oldValue: {
+          key: 'value',
+        },
+        newValue: 'str',
       },
     ],
   },
   {
     key: 'group2',
     type: 'removed',
-    children: [
-      {
-        key: 'abc',
-        type: 'unchanged',
-        value: 12345,
+    value: {
+      abc: 12345,
+      deep: {
+        id: 45,
       },
-      {
-        key: 'deep',
-        type: 'unchanged',
-        children: [
-          {
-            key: 'id',
-            type: 'unchanged',
-            value: 45,
-          },
-        ],
-      },
-    ],
+    },
   },
   {
     key: 'group3',
     type: 'added',
-    children: [
-      {
-        key: 'deep',
-        type: 'unchanged',
-        children: [
-          {
-            key: 'id',
-            type: 'unchanged',
-            children: [
-              {
-                key: 'number',
-                type: 'unchanged',
-                value: 45,
-              },
-            ],
-          },
-        ],
+    value: {
+      deep: {
+        id: {
+          number: 45,
+        },
       },
-      {
-        key: 'fee',
-        type: 'unchanged',
-        value: 100500,
-      },
-    ],
+      fee: 100500,
+    },
   },
 ];
