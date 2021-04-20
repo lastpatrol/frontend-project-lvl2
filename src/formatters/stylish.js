@@ -1,47 +1,64 @@
 import _ from 'lodash';
 
-const stylish = (diffObj) => {
-  const block = ' ';
-  const indentStep = 4;
-  const diffLength = 2;
-  const getDiffStr = (key) => {
-    if (key === '+') return '+ ';
-    if (key === '-') return '- ';
-    return '  ';
-  };
+const block = ' ';
+const indentStep = 4;
+const diffLength = 2;
+const getDiffStr = (key) => {
+  if (key === '+') return '+ ';
+  if (key === '-') return '- ';
+  return '  ';
+};
 
+const valueToString = (val, indentCount) => {
+  if (!_.isPlainObject(val)) {
+    return `${val}`;
+  }
+
+  const indentation = _.repeat(block, indentCount);
+  const entries = Object.entries(val);
+  const arrOfStrings = entries.map(([key, value]) => {
+    const valuePart = _.isPlainObject(value)
+      ? valueToString(value, indentCount + indentStep) : value;
+    return `${indentation}${key}: ${valuePart}`;
+  });
+  const closingBracketIndentation = _.repeat(block, indentCount - indentStep);
+  return `{\n${arrOfStrings.join('\n')}\n${closingBracketIndentation}}`;
+};
+
+const stylish = (diffObj) => {
   const iter = (obj, indentCount) => {
     const indentation = _.repeat(block, indentCount);
     const arrOfStrings = obj.reduce(
       (acc, node) => {
         const { type, key } = node;
-        const makeSimpleStr = (sign, value = node.value) => `${indentation}${getDiffStr(sign)}${key}: ${value}`;
-        const makeNestedStr = (sign) => `${indentation}${getDiffStr(sign)}${key}: ${iter(node.children, indentCount + indentStep)}`;
 
         switch (type) {
           case 'added':
             return [
               ...acc,
-              _.has(node, 'value') ? makeSimpleStr('+') : makeNestedStr('+'),
+              `${indentation}${getDiffStr('+')}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
             ];
           case 'removed':
             return [
               ...acc,
-              _.has(node, 'value') ? makeSimpleStr('-') : makeNestedStr('-'),
+              `${indentation}${getDiffStr('-')}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
+            ];
+          case 'nested':
+            return [
+              ...acc,
+              `${indentation}${getDiffStr()}${key}: ${iter(node.children, indentCount + indentStep)}`,
+            ];
+          case 'changed':
+            return [
+              ...acc,
+              `${indentation}${getDiffStr('-')}${key}: ${valueToString(node.oldValue, indentCount + indentStep + diffLength)}`,
+              `${indentation}${getDiffStr('+')}${key}: ${valueToString(node.newValue, indentCount + indentStep + diffLength)}`,
             ];
           case 'unchanged':
             return [
               ...acc,
-              _.has(node, 'value') ? makeSimpleStr('') : makeNestedStr(''),
+              `${indentation}${getDiffStr()}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
             ];
-          case 'toSimple':
-            return [
-              ...acc,
-              _.has(node, 'children') ? makeNestedStr('-') : makeSimpleStr('-', node.removedValue),
-              _.has(node, 'value') ? makeSimpleStr('+') : makeSimpleStr('+', node.addedValue),
-            ];
-          case 'toNested':
-            return [...acc, makeSimpleStr('-'), makeNestedStr('+')];
           default:
             throw new Error(`Unknown node type '${type}'`);
         }
