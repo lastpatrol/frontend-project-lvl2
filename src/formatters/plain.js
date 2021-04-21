@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const dataToStr = (data) => {
-  if (Array.isArray(data)) {
+  if (Array.isArray(data) || _.isPlainObject(data)) {
     return '[complex value]';
   }
   if (typeof data === 'string') {
@@ -10,50 +10,23 @@ const dataToStr = (data) => {
   return String(data);
 };
 
-const getRemovedAsStr = (obj) => {
-  switch (obj.type) {
-    case 'removed':
-      return _.has(obj, 'value') ? dataToStr(obj.value) : dataToStr(obj.children);
-    case 'toSimple':
-      return _.has(obj, 'children') ? dataToStr(obj.children) : dataToStr(obj.removedValue);
-    case 'toNested':
-      return dataToStr(obj.value);
-    default:
-      throw new Error(`Cannot find removed in:\n${JSON.stringify(obj)}`);
-  }
-};
-
-const getAddedAsStr = (obj) => {
-  switch (obj.type) {
-    case 'added':
-      return _.has(obj, 'value') ? dataToStr(obj.value) : dataToStr(obj.children);
-    case 'toSimple':
-      return _.has(obj, 'value') ? dataToStr(obj.value) : dataToStr(obj.addedValue);
-    case 'toNested':
-      return dataToStr(obj.children);
-    default:
-      throw new Error(`Cannot find added in:\n${JSON.stringify(obj)}`);
-  }
-};
-
 const plain = (diffObj) => {
-  const iter = (entries, path) => entries.reduce(
-    (acc, obj) => {
-      const { key, type } = obj;
+  const iter = (nodes, path) => nodes.reduce(
+    (acc, node) => {
+      const { key, type } = node;
       const fullPath = path.length === 0 ? `${key}` : `${path}.${key}`;
 
       switch (type) {
         case 'added':
-          return [...acc, `Property '${fullPath}' was added with value: ${getAddedAsStr(obj)}`];
+          return [...acc, `Property '${fullPath}' was added with value: ${dataToStr(node.value)}`];
         case 'removed':
           return [...acc, `Property '${fullPath}' was removed`];
-        case 'toSimple':
-        case 'toNested':
-          return [...acc, `Property '${fullPath}' was updated. From ${getRemovedAsStr(obj)} to ${getAddedAsStr(obj)}`];
+        case 'nested':
+          return [...acc, ...iter(node.children, fullPath)];
         case 'unchanged':
-          return (_.has(obj, 'children'))
-            ? [...acc, ...iter(obj.children, fullPath)]
-            : acc;
+          return acc;
+        case 'changed':
+          return [...acc, `Property '${fullPath}' was updated. From ${dataToStr(node.oldValue)} to ${dataToStr(node.newValue)}`];
         default:
           throw new Error(`Unknown type! Type: '${type}', key '${key}'`);
       }
@@ -61,7 +34,7 @@ const plain = (diffObj) => {
     [],
   );
 
-  return iter(diffObj, []).join('\n');
+  return iter(diffObj, '').join('\n');
 };
 
 export default plain;
