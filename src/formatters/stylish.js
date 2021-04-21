@@ -31,34 +31,22 @@ const stylish = (diffObj) => {
     const arrOfStrings = obj.reduce(
       (acc, node) => {
         const { type, key } = node;
+        const makeStr = (sign, value) => `${indentation}${getDiffStr(sign)}${key}: ${valueToString(value, indentCount + indentStep + diffLength)}`;
 
         switch (type) {
           case 'added':
-            return [
-              ...acc,
-              `${indentation}${getDiffStr('+')}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
-            ];
+            return [...acc, makeStr('+', node.value)];
           case 'removed':
-            return [
-              ...acc,
-              `${indentation}${getDiffStr('-')}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
-            ];
+            return [...acc, makeStr('-', node.value)];
           case 'nested':
             return [
               ...acc,
               `${indentation}${getDiffStr()}${key}: ${iter(node.children, indentCount + indentStep)}`,
             ];
           case 'changed':
-            return [
-              ...acc,
-              `${indentation}${getDiffStr('-')}${key}: ${valueToString(node.oldValue, indentCount + indentStep + diffLength)}`,
-              `${indentation}${getDiffStr('+')}${key}: ${valueToString(node.newValue, indentCount + indentStep + diffLength)}`,
-            ];
+            return [...acc, makeStr('-', node.oldValue), makeStr('+', node.newValue)];
           case 'unchanged':
-            return [
-              ...acc,
-              `${indentation}${getDiffStr()}${key}: ${valueToString(node.value, indentCount + indentStep + diffLength)}`,
-            ];
+            return [...acc, makeStr('', node.value)];
           default:
             throw new Error(`Unknown node type '${type}'`);
         }
