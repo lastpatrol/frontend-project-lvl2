@@ -2,14 +2,7 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import parse from './parse.js';
 import genDiff from './gendiff.js';
-import stylish from './formatters/stylish.js';
-import lazy from './formatters/lazy.js';
-import plain from './formatters/plain.js';
-import json from './formatters/json.js';
-
-const formatters = {
-  stylish, lazy, plain, json,
-};
+import getFormatter from './formatters/get-formatter.js';
 
 export default (filepath1, filepath2, format = 'stylish') => {
   const cwd = process.cwd();
@@ -22,5 +15,5 @@ export default (filepath1, filepath2, format = 'stylish') => {
   const obj1 = parse(data1, type1);
   const obj2 = parse(data2, type2);
   const diffObj = genDiff(obj1, obj2);
-  return formatters[format](diffObj);
+  return getFormatter(format)(diffObj);
 };
